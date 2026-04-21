@@ -2,7 +2,7 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 const { exiftool } = require('exiftool-vendored');
 
-// Configuration
+// Konfiguration
 const CONFIG = {
     fontFamily: 'Material Symbols Rounded',
     cssUrl: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,200',
@@ -14,8 +14,8 @@ const CONFIG = {
 };
 
 const dirs = {
-    0: `${CONFIG.outputDir}/outlined`,
-    1: `${CONFIG.outputDir}/filled`
+    0: `${CONFIG.outputDir}/umrandet`,
+    1: `${CONFIG.outputDir}/ausgefuellt`
 };
 
 if (!fs.existsSync(CONFIG.outputDir)) fs.mkdirSync(CONFIG.outputDir);
@@ -23,7 +23,7 @@ if (!fs.existsSync(dirs[0])) fs.mkdirSync(dirs[0], { recursive: true });
 if (!fs.existsSync(dirs[1])) fs.mkdirSync(dirs[1], { recursive: true });
 
 async function fetchIconNames() {
-    process.stdout.write('⏳ Ziehe Icon-Liste von Google Fonts...');
+    process.stdout.write('Ziehe Icon-Liste von Google Fonts...');
     const response = await fetch(CONFIG.metadataUrl);
     let text = await response.text();
 
@@ -43,9 +43,9 @@ async function runExport() {
     const totalFiles = totalIcons * 2;
 
     // Ausgabe: Wie viele wurden gezogen?
-    console.log(`\r✅ Erfolgreich gezogen: ${totalIcons} Icons.`);
-    console.log(`ℹ️  Das ergibt insgesamt ${totalFiles} Bilder (Filled & Outlined).`);
-    console.log('🚀 Starte Browser und Metadaten-Tool... Bitte warten.\n');
+    console.log(`\rErfolgreich gezogen: ${totalIcons} Icons.`);
+    console.log(`Das ergibt insgesamt ${totalFiles} Bilder (Filled & Outlined).`);
+    console.log('Starte Browser und Metadaten-Tool... Bitte warten.\n');
 
     const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
@@ -53,7 +53,7 @@ async function runExport() {
 
     const htmlContent = `
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="de">
         <head>
             <link href="${CONFIG.cssUrl}" rel="stylesheet" />
             <style>
@@ -89,11 +89,11 @@ async function runExport() {
 
             await iconElement.screenshot({ path: filePath, omitBackground: true });
 
-            const fillText = fill === 1 ? 'Filled (1)' : 'Outlined (0)';
-            const descriptionString = `Weight: 400, Grade: 200, Optical Size: 24, Color: #FFFFFF, Size: 200px, Style: Rounded, Type: Material Symbols (new), Fill: ${fillText}`;
+            const fillText = fill === 1 ? 'Ausgefüllt (1)' : 'Umrandet (0)';
+            const descriptionString = `Gewicht: 400, Stärke: 200, Optische Größe: 24, Farbe: #FFFFFF, Größe: 200px, Stil: Abgerundet, Typ: Material Symbols (neu), Füllung: ${fillText}`;
 
             await exiftool.write(filePath, {
-                Title: `${iconName} icon`,
+                Title: `${iconName} Icon`,
                 Description: descriptionString,
                 ImageDescription: descriptionString,
                 Comment: descriptionString
@@ -104,7 +104,7 @@ async function runExport() {
         // .padEnd(80) sorgt dafür, dass längere vorherige Wörter sauber überschrieben werden
         const processedFiles = (i + 1) * 2;
         const percent = (((i + 1) / totalIcons) * 100).toFixed(1);
-        process.stdout.write(`\r🔄 Verarbeitet: ${i + 1} / ${totalIcons} Icons [${percent}%] (${processedFiles}/${totalFiles} Bilder) | Aktuell: ${iconName}`.padEnd(100));
+        process.stdout.write(`\rVerarbeitet: ${i + 1} / ${totalIcons} Icons [${percent}%] (${processedFiles}/${totalFiles} Bilder) | Aktuell: ${iconName}`.padEnd(100));
     }
 
     console.log('\n\n🎉 Export & Metadaten komplett abgeschlossen!');
@@ -113,6 +113,6 @@ async function runExport() {
 }
 
 runExport().catch(err => {
-    console.error('\n❌ Ein Fehler ist aufgetreten:', err);
+    console.error('\nEin Fehler ist aufgetreten:', err);
     exiftool.end();
 });
