@@ -1,0 +1,4 @@
+exported_icons/
+node_modules/
+.DS_Store
+*.log

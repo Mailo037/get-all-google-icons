@@ -1,0 +1,24 @@
+{
+  "name": "get-all-google-icons",
+  "version": "1.0.0",
+  "description": "A batch exporter for Google Material Symbols. Exports icons as PNGs with custom styles and embedded metadata.",
+  "main": "export_icons.js",
+  "scripts": {
+    "start": "node export_icons.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "google-icons",
+    "material-symbols",
+    "exporter",
+    "puppeteer",
+    "metadata"
+  ],
+  "author": "kasto",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "exiftool-vendored": "^35.18.0",
+    "puppeteer": "^24.42.0"
+  }
+}
